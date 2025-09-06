@@ -1,3 +1,12 @@
+    </main>
+  );
+}
+
+export default NKShop;
+
+git commit -m ...
+git push ...
+npm run build
 'use client';
 
 import React, { useState } from 'react';
