@@ -1,4 +1,11 @@
 npm i framer-motion@latest \
+&& git add package.json ...
+&& git commit -m ...
+&& git push -u origin main
+import React, { useMemo, useState } from "react";
+// import { motion, AnimatePresence } from "framer-motion";  ← tu peux la supprimer si tu n’utilises plus motion
+import { ShoppingCart, X, Plus, Minus, Filter, Truck, MapPin, Phone, Mail, Package, Trash2 } from "lucide-react";
+npm i framer-motion@latest \
 && git add package.json package-lock.json components/NKShop.tsx \
 && git commit -m "fix: add framer-motion for Vercel build" \
 && git push -u origin main
