@@ -1,5 +1,75 @@
 'use client';
 
+import React, { useState } from 'react';
+
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  image: string;
+  unit: string;
+};
+
+const PRODUCTS: Product[] = [
+  { id: 'gaz6kg',  name: 'Bouteille de gaz 6 kg',  price: 7000,  category: 'Gaz',      image: '/gaz6kg.jpg',  unit: 'pièce' },
+  { id: 'gaz12kg', name: 'Bouteille de gaz 12 kg', price: 14000, category: 'Gaz',      image: '/gaz12kg.jpg', unit: 'pièce' },
+  { id: 'savon',   name: 'Savon (lot de 6)',       price: 3500,  category: 'Hygiène',  image: '/savon.jpg',   unit: 'lot'  },
+];
+
+const CURRENCY = 'CFA'; // XOF
+
+function formatMoney(n: number) {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'XOF',
+    currencyDisplay: 'code',
+  }).format(n);
+}
+
+export default function NKShop() {
+  const [cart, setCart] = useState<Record<string, number>>({});
+
+  function add(id: string) {
+    setCart((c) => ({ ...c, [id]: (c[id] ?? 0) + 1 }));
+  }
+
+  const total = Object.entries(cart).reduce((sum, [id, qty]) => {
+    const p = PRODUCTS.find((x) => x.id === id);
+    return sum + (p ? p.price * qty : 0);
+  }, 0);
+
+  return (
+    <main className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-semibold">NK Agricole — Boutique</h1>
+
+      <ul className="mt-4 space-y-3">
+        {PRODUCTS.map((p) => (
+          <li key={p.id} className="flex items-center justify-between border p-3 rounded">
+            <div>
+              <div className="font-medium">{p.name}</div>
+              <div className="text-sm text-gray-500">
+                {p.category} • {p.unit} • {formatMoney(p.price)}
+              </div>
+            </div>
+            <button
+              onClick={() => add(p.id)}
+              className="px-3 py-1 rounded bg-black text-white"
+            >
+              Ajouter
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-6 text-right font-medium">
+        Total : {formatMoney(total)} {CURRENCY}
+      </div>
+    </main>
+  );
+}
+'use client';
+
 import React, { useMemo, useState } from 'react';
 
 type Product = {
