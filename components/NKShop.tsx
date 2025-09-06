@@ -1,3 +1,148 @@
+'use client';
+
+import React, { useMemo, useState } from 'react';
+
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  image: string;
+  unit: string;
+};
+
+const PRODUCTS: Product[] = [
+  { id: 'gaz6kg',   name: 'Bouteille de gaz 6 kg',  price: 7000,  category: 'Gaz',      image: '', unit: 'pièce' },
+  { id: 'gaz12kg',  name: 'Bouteille de gaz 12 kg', price: 14000, category: 'Gaz',      image: '', unit: 'pièce' },
+  { id: 'couches',  name: 'Couches bébé (carton)',  price: 18000, category: 'Hygiène',  image: '', unit: 'carton' },
+  { id: 'savon',    name: 'Savon (lot de 6)',       price: 3500,  category: 'Hygiène',  image: '', unit: 'lot' },
+  { id: 'parfum50', name: 'Parfum 50ml',            price: 9000,  category: 'Parfumerie', image: '', unit: 'pièce' },
+];
+
+const CURRENCY = 'CFA'; // ou 'XOF'
+
+function formatMoney(n: number) {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'XOF',
+    currencyDisplay: 'code',
+  }).format(n);
+}
+
+export default function NKShop() {
+  const [cart, setCart] = useState<Record<string, number>>({});
+  const [query, setQuery] = useState('');
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return PRODUCTS;
+    return PRODUCTS.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q)
+    );
+  }, [query]);
+
+  const add = (id: string) =>
+    setCart((c) => ({ ...c, [id]: (c[id] ?? 0) + 1 }));
+
+  const minus = (id: string) =>
+    setCart((c) => {
+      const qty = (c[id] ?? 0) - 1;
+      const next = { ...c };
+      if (qty <= 0) delete next[id];
+      else next[id] = qty;
+      return next;
+    });
+
+  const total = useMemo(
+    () =>
+      Object.entries(cart).reduce((sum, [id, qty]) => {
+        const p = PRODUCTS.find((x) => x.id === id);
+        return sum + (p ? p.price * qty : 0);
+      }, 0),
+    [cart]
+  );
+
+  const whatsappNumber = '33641834248'; // mets ton numéro sans + ni espaces
+  const waText = useMemo(() => {
+    const lines = Object.entries(cart)
+      .map(([id, qty]) => {
+        const p = PRODUCTS.find((x) => x.id === id);
+        return p ? `${p.name} x${qty}` : '';
+      })
+      .filter(Boolean)
+      .join('\n');
+    const body =
+      `Commande NK Agricole:\n` +
+      (lines ? `${lines}\n` : '') +
+      `Total: ${formatMoney(total)}`;
+    return encodeURIComponent(body);
+  }, [cart, total]);
+
+  return (
+    <main className="mx-auto max-w-3xl p-4">
+      <h1 className="text-2xl font-bold mb-4">NK Agricole — Boutique</h1>
+
+      <input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Rechercher un produit…"
+        className="w-full border rounded px-3 py-2 mb-4"
+      />
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        {filtered.map((p) => {
+          const qty = cart[p.id] ?? 0;
+          return (
+            <div key={p.id} className="border rounded p-3">
+              <div className="font-semibold">{p.name}</div>
+              <div className="text-sm text-gray-600">
+                {p.category} • {p.unit}
+              </div>
+              <div className="mt-2">{formatMoney(p.price)}</div>
+
+              <div className="mt-3 flex items-center gap-2">
+                <button
+                  onClick={() => minus(p.id)}
+                  className="px-3 py-1 rounded border"
+                >
+                  –
+                </button>
+                <span className="min-w-[2rem] text-center">{qty}</span>
+                <button
+                  onClick={() => add(p.id)}
+                  className="px-3 py-1 rounded border bg-black text-white"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-8 flex items-center justify-between">
+        <div className="text-lg font-semibold">
+          Total : {formatMoney(total)}
+        </div>
+        <a
+          href={`https://wa.me/${whatsappNumber}?text=${waText}`}
+          target="_blank"
+          rel="noreferrer"
+          className="px-4 py-2 rounded bg-green-600 text-white"
+        >
+          Commander sur WhatsApp
+        </a>
+      </div>
+
+      <footer className="mt-10 text-center text-xs text-gray-500">
+        © NK Agricole — Livraison Abidjan (exemple). Modifie cette ligne dans
+        <code className="mx-1">components/NKShop.tsx</code>.
+      </footer>
+    </main>
+  );
+}
 npm i framer-motion@latest \
 && git add package.json ...
 && git commit -m ...
