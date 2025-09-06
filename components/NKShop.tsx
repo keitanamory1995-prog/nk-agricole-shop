@@ -1,3 +1,6 @@
+'use client'
+import React, { useMemo, useState } from 'react'
+// supprime aussi import { motion } from "framer-motion" si tu n’utilises plus motion
 npm i framer-motion@latest \
 && git add package.json ...
 && git commit -m ...
