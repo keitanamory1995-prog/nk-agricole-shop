@@ -1,3 +1,16 @@
+npm i framer-motion@latest \
+&& git add package.json package-lock.json components/NKShop.tsx \
+&& git commit -m "fix: add framer-motion for Vercel build" \
+&& git push -u origin main
+npm i framer-motion@latest \
+&& git add package.json package-lock.json components/NKShop.tsx \
+&& git commit -m "fix: add framer-motion for Vercel build" \
+&& git push -u origin main
+
+npm i framer-motion@latest
+&& git add ...
+&& git commit ...
+&& git push ...
 
 import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
