@@ -83,7 +83,7 @@ const products: Product[] = [
 const categoryIcons = {
   Gaz: Flame,
   Bébé: Baby,
-  Hygiène:   Parfums: Sparkles
+  Hygiène: ShieldCheck, Parfums: Sparkles
 };
 
 const features = [
