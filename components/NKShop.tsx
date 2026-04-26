@@ -1,6 +1,6 @@
  'use client';
 
-import { Baby, Flame, Soap, Sparkles, Truck, ShieldCheck, PhoneCall, ArrowRight } from 'lucide-react';
+import { Baby, Flame,  Sparkles, Truck, ShieldCheck, PhoneCall, ArrowRight } from 'lucide-react';
 
 type Product = {
   id: string;
@@ -83,8 +83,7 @@ const products: Product[] = [
 const categoryIcons = {
   Gaz: Flame,
   Bébé: Baby,
-  Hygiène: Soap,
-  Parfums: Sparkles
+  Hygiène:   Parfums: Sparkles
 };
 
 const features = [
